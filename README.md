@@ -15,7 +15,7 @@ npx create-cw-file kata-id
 ```
 
 It will create a directory (if it does not already exist) named after the difficulty of the kata inside the current folder.<br>
-Inside that directory, it will generate a file with a commented out link to the kata and open it.
+Inside that directory, it will generate a javascript file with a commented out link to the kata and open it.
 
 ```
 6-kyu
