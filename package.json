@@ -1,0 +1,11 @@
+{
+  "name": "create-cw-file",
+  "version": "1.0.1",
+  "description": "Create a codewars base file.",
+  "main": "index.js",
+  "bin": {
+    "create-cw-file": "bin/index.js"
+  },
+  "author": "Seweryn",
+  "license": "ISC"
+}
