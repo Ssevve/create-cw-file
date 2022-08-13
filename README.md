@@ -7,7 +7,8 @@ An NPX tool that creates a base codewars file after providing a kata id.
 
 ## Creating a File
 
-**You’ll need to have Node 7.0.0 or later version on your machine.**
+**You’ll need to have Node 7.0.0 or later version on your machine.**<br>
+**You'll need to have a VS Code installed on your machine.**
 <br><br>
 To create a new file:
 ```sh
@@ -15,7 +16,7 @@ npx create-cw-file kata-id
 ```
 
 It will create a directory (if it does not already exist) named after the difficulty of the kata inside the current folder.<br>
-Inside that directory, it will generate a javascript file with a commented out link to the kata and open it.
+Inside that directory, it will generate a javascript file with a commented out link to the kata and open it in VS Code.
 
 ```
 6-kyu
