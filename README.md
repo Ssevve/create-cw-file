@@ -10,6 +10,11 @@ An NPX tool that creates a base codewars file after providing a kata id.
 **You’ll need to have Node 7.0.0 or later version on your machine.**<br>
 **You'll need to have a VS Code installed on your machine.**
 <br><br>
+To install the package globally:
+```sh
+npm i -g create-cw-file
+```
+
 To create a new file:
 ```sh
 npx create-cw-file kata-id
