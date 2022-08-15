@@ -24,6 +24,7 @@ It will create a directory (if it does not already exist) named after the diffic
 Inside that directory, it will generate a javascript file with a commented out link to the kata and open it in VS Code.
 
 ```
-6-kyu
-├── sample-kata.js
+codewars
+├── 6-kyu
+    ├── sample-kata.js
 ```
