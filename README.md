@@ -3,7 +3,7 @@ An NPX tool that creates a base codewars file after providing a kata id.
 
 **Link to project:** [here](https://www.npmjs.com/package/create-cw-file)
 
-## Tech used: ![JavaScript Badge](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=CSS3&logoColor=white&style=flat) ![NodeJS](https://img.shields.io/badge/-NodeJS-339933?logo=Node.js&logoColor=white&style=flat)
+## Tech used: ![JavaScript Badge](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=JavaSCript&logoColor=white&style=flat) ![NodeJS](https://img.shields.io/badge/-NodeJS-339933?logo=Node.js&logoColor=white&style=flat)
 
 ## Creating a File
 
