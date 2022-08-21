@@ -15,7 +15,7 @@ function createAndOpenKataFile(data) {
   const dirName = `${kyu}-kyu`;
   if (!fs.existsSync(dirName)) fs.mkdirSync(dirName);
 
-  const fileName = `${data.slug}.js`;
+  const fileName = `${modifySlug(data.slug)}.js`;
   if (fs.existsSync(`${dirName}/${fileName}`)) return console.log('File already exists. Returning...');
   
   const fileContent = `// ${data.url}\n\n`;
@@ -24,6 +24,12 @@ function createAndOpenKataFile(data) {
     console.log('File was created successfully.');
     exec(`code ${dirName}/${fileName}`);
   });
+}
+
+function modifySlug(slug) {
+  const splitSlug = slug.split('-');
+  const newSlug = splitSlug.filter(str => str.match(/\w/g)).join('-');
+  return newSlug;
 }
 
 async function fetchKataAndCreateFile(id) {
