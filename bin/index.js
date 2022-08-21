@@ -1,14 +1,22 @@
 #! /usr/bin/env node
 const fs = require('fs');
 const { exec } = require('child_process');
+const languages = require('../languages.json');
+const config = require('../config');
 
-const id = process.argv.slice(2);
-if (id.length > 1) {
-  console.error('Enter valid id.');
-  process.exit(1); // Exiting, error ocurred
-} else {
-  fetchKataAndCreateFile(id);
+const args = process.argv.slice(2);
+if (args.includes('-d')) {
+  const flagIndex = args.indexOf('-d');
+  args.splice(flagIndex, 1);
+  config.includeDescription = true;
 }
+
+if (args.length > 1) {
+  process.exit(1); // Exiting, error ocurred
+}
+
+const id = args[0];
+fetchKataAndCreateFile(id);
 
 function createAndOpenKataFile(data) {
   const kyu = data.rank.name[0];
@@ -18,7 +26,49 @@ function createAndOpenKataFile(data) {
   const fileName = `${modifySlug(data.slug)}.js`;
   if (fs.existsSync(`${dirName}/${fileName}`)) return console.log('File already exists. Returning...');
   
-  const fileContent = `// ${data.url}\n\n`;
+  let fileContent = `// ${data.url}\n\n`;
+
+  if (config.includeDescription) {
+    const kataDescription = data.description.trim();
+
+    const splitDescription = kataDescription.split('\n```');
+
+    for (let i = 0; i < splitDescription.length; i++) {
+      if (splitDescription[i].startsWith('if')) {
+        const splitIfBlock = splitDescription[i].split('\n');
+        const [ifType, language] = splitIfBlock[0].split(':');
+        
+        if (ifType === 'if') {
+          language !== 'js'
+          ? splitDescription[i] = ''
+          : splitDescription[i] = splitIfBlock.slice(1).join('\n');
+        }
+
+        else if (ifType === 'if-not') {
+          language === 'js'
+          ? splitDescription[i] = ''
+          : splitDescription[i] = splitIfBlock.slice(1).join('\n');
+        }
+      }
+
+      // Full programming languages names
+      const [fullName, ...instructions] = splitDescription[i].split('\n');
+      if (Object.keys(languages).includes(fullName)) {
+        if (fullName !== config.language) {
+          splitDescription[i] = '';
+        } else {
+          splitDescription[i] = instructions.join('\n');
+        }
+      }
+      console.log(fullName);
+      console.log(instructions);
+    }
+
+
+    const newDescription = splitDescription.join('\n');
+    fileContent += `/*\n${newDescription}\n*/`;
+  }
+
   fs.writeFile(`${dirName}/${fileName}`, fileContent, function (err) {
     if (err) throw err;
     console.log('File was created successfully.');
