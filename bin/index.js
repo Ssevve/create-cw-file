@@ -65,7 +65,7 @@ function createAndOpenKataFile(data) {
     }
 
 
-    const newDescription = splitDescription.join('\n');
+    const newDescription = splitDescription.filter(line => line !== '').join('\n');
     fileContent += `/*\n${newDescription}\n*/`;
   }
 
