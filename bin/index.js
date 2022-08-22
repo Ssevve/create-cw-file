@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 const fs = require('fs');
-const { exec } = require('child_process');
 const languages = require('../languages.json');
 const config = require('../config');
 
@@ -18,62 +17,72 @@ if (args.length > 1) {
 const id = args[0];
 fetchKataAndCreateFile(id);
 
-function createAndOpenKataFile(data) {
+function createKataFile(data) {
   const kyu = data.rank.name[0];
   const dirName = `${kyu}-kyu`;
   if (!fs.existsSync(dirName)) fs.mkdirSync(dirName);
 
-  const fileName = `${removeInvalidCharacters(data.slug)}.js`;
-  if (fs.existsSync(`${dirName}/${fileName}`)) return console.log('File already exists. Returning...');
-  
+  const fileName = `${removeInvalidCharacters(data.slug)}.${
+    languages[config.language].extension
+  }`;
+  if (fs.existsSync(`${dirName}/${fileName}`))
+    return console.log('File already exists. Returning...');
+
   let fileContent = `// ${data.url}\n\n`;
 
   if (config.includeDescription) {
-    const kataDescription = data.description.trim();
-
-    const splitDescription = kataDescription.split('\n```');
-
-    for (let i = 0; i < splitDescription.length; i++) {
-      if (splitDescription[i].startsWith('if')) {
-        const splitIfBlock = splitDescription[i].split('\n');
-        const [ifType, language] = splitIfBlock[0].split(':');
-        
-        if (ifType === 'if') {
-          language !== 'js'
-          ? splitDescription[i] = ''
-          : splitDescription[i] = splitIfBlock.slice(1).join('\n');
-        }
-
-        else if (ifType === 'if-not') {
-          language === 'js'
-          ? splitDescription[i] = ''
-          : splitDescription[i] = splitIfBlock.slice(1).join('\n');
-        }
-      }
-
-      // Full programming languages names
-      const [fullName, ...instructions] = splitDescription[i].split('\n');
-      if (Object.keys(languages).includes(fullName)) {
-        if (fullName !== config.language) {
-          splitDescription[i] = '';
-        } else {
-          splitDescription[i] = instructions.join('\n');
-        }
-      }
-      console.log(fullName);
-      console.log(instructions);
-    }
-
-
-    const newDescription = splitDescription.filter(line => line !== '').join('\n');
-    fileContent += `/*\n${newDescription}\n*/`;
+    const parsedDescription = parseDescription(data.description);
+    fileContent += `/*\n${parsedDescription}\n*/`;
   }
 
   fs.writeFile(`${dirName}/${fileName}`, fileContent, function (err) {
     if (err) throw err;
     console.log('File was created successfully.');
-    exec(`code ${dirName}/${fileName}`);
   });
+}
+
+function parseDescription(description) {
+  const kataDescription = description.trim();
+  const lines = kataDescription.split('\n');
+  const codeBlocks = lines.filter(line => line.match(/^(`){3}./)); // Match lines that start with ```
+  
+  for (let i = codeBlocks.length - 1; i >= 0; i--) {
+    const currentCodeBlock = codeBlocks[i];
+    const startIndex = lines.indexOf(currentCodeBlock);
+    const endIndex = lines.indexOf('```', startIndex);
+    const spliceAmount = (endIndex + 1) - startIndex;
+
+    if (currentCodeBlock.includes('if')) {
+      const [left, languageShort] = currentCodeBlock.split(':');
+      const ifType = left.split('```')[1];
+      const chosenLanguageShort = languages[config.language].short;
+
+      if (ifType === 'if') {
+        languageShort === chosenLanguageShort
+        ? removeUnnecessarySyntax(lines, startIndex, endIndex)
+        : lines.splice(startIndex, spliceAmount);
+      } 
+      
+      else if (ifType === 'if-not') {
+        languageShort === chosenLanguageShort
+        ? lines.splice(startIndex, spliceAmount)
+        : removeUnnecessarySyntax(lines, startIndex, endIndex);
+      }
+    } 
+    
+    else {
+      const currentCodeBlockLanguage = currentCodeBlock.split('```')[1];
+      if (currentCodeBlockLanguage !== config.language) lines.splice(startIndex, spliceAmount);
+    }
+  }
+
+  const parsedDescription = lines.join('\n');
+  return parsedDescription;
+}
+
+function removeUnnecessarySyntax(lines, startIndex, endIndex) {
+  lines.splice(startIndex, 1, '');
+  lines.splice(endIndex, 1, '');
 }
 
 function removeInvalidCharacters(slug) {
@@ -87,7 +96,7 @@ async function fetchKataAndCreateFile(id) {
   const response = await fetch(url);
   const data = await response.json();
 
-  if (data.success === false) return console.log('Something went wrong. Try again.');
-  createAndOpenKataFile(data);
+  if (data.success === false)
+    return console.log('Something went wrong. Try again.');
+  createKataFile(data);
 }
-
