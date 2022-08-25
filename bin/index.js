@@ -25,6 +25,7 @@ function createKataFile(data) {
   const fileName = `${removeInvalidCharacters(data.slug)}.${
     languages[config.language].extension
   }`;
+
   if (fs.existsSync(`${dirName}/${fileName}`))
     return console.log('File already exists. Returning...');
 
@@ -52,7 +53,7 @@ function parseDescription(description) {
     const endIndex = lines.indexOf('```', startIndex);
     const spliceAmount = (endIndex + 1) - startIndex;
 
-    if (currentCodeBlock.includes('if')) {
+    if (currentCodeBlock.includes('```if')) {
       const [left, languageShort] = currentCodeBlock.split(':');
       const ifType = left.split('```')[1];
       const chosenLanguageShort = languages[config.language].short;
@@ -71,11 +72,17 @@ function parseDescription(description) {
     } 
     
     else {
+      // If so, do not remove that block if it contains only one language, 
+      // instructions may not be clear after removing it
+      const languagesTotal = [...new Set(codeBlocks)].length;
+      if (languagesTotal === 1) continue;
+
       const currentCodeBlockLanguage = currentCodeBlock.split('```')[1];
       if (currentCodeBlockLanguage !== config.language) lines.splice(startIndex, spliceAmount);
     }
   }
 
+  lines.forEach(line => line.trim());
   const parsedDescription = lines.join('\n');
   return parsedDescription;
 }
