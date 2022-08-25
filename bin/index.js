@@ -53,24 +53,23 @@ function parseDescription(description) {
     const endIndex = lines.indexOf('```', startIndex);
     const spliceAmount = (endIndex + 1) - startIndex;
 
-    if (currentCodeBlock.includes('```if')) {
-      const [left, languageShort] = currentCodeBlock.split(':');
-      const ifType = left.split('```')[1];
-      const chosenLanguageShort = languages[config.language].short;
+    if (currentCodeBlock.includes('```if') || currentCodeBlock.includes('~~~if')) {
+      const [left, languages] = currentCodeBlock.split(':');
+      const prefix = left.split('if')[0];
+      const ifType = left.split(prefix)[1];
 
       if (ifType === 'if') {
-        languageShort === chosenLanguageShort
+        languages.includes(config.language)
         ? removeUnnecessarySyntax(lines, startIndex, endIndex)
         : lines.splice(startIndex, spliceAmount);
       } 
       
       else if (ifType === 'if-not') {
-        languageShort === chosenLanguageShort
+        languages.includes(config.language)
         ? lines.splice(startIndex, spliceAmount)
         : removeUnnecessarySyntax(lines, startIndex, endIndex);
       }
     } 
-    
     else {
       // If so, do not remove that block if it contains only one language, 
       // instructions may not be clear after removing it
@@ -78,6 +77,7 @@ function parseDescription(description) {
       if (languagesTotal === 1) continue;
 
       const currentCodeBlockLanguage = currentCodeBlock.split('```')[1];
+      if (currentCodeBlockLanguage === 'math') continue;
       if (currentCodeBlockLanguage !== config.language) lines.splice(startIndex, spliceAmount);
     }
   }

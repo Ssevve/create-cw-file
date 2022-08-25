@@ -1,4 +1,4 @@
 module.exports =  {
   includeDescription: false,
-  language: 'javascript'
+  language: 'javascript',
 }

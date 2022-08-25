@@ -1,42 +1,14 @@
 {
   "javascript": {
-    "extension": "js",
-    "short": "js"
+    "extension": "js"
   },
-  "ruby": {},
-  "python": {},
-  "coffeescript": {},
-  "java": {},
-  "csharp": {},
-  "haskell": {},
-  "clojure": {},
-  "cpp": {},
-  "php": {},
-  "typescript": {},
-  "fsharp": {},
-  "c": {},
-  "crystal": {},
-  "rust": {},
-  "swift": {},
-  "r": {},
-  "shell": {},
-  "objc": {},
-  "ocaml": {},
-  "julia": {},
-  "scala": {},
-  "go": {},
-  "nim": {},
-  "racket": {},
-  "reason": {},
-  "kotlin": {},
-  "elixir": {},
-  "prolog": {},
-  "pascal": {},
-  "dart": {},
-  "lua": {},
-  "perl": {},
-  "elm": {},
-  "d": {},
-  "erlang": {},
-  "cobol": {}
+  "python": {
+    "extension": "py"
+  },
+  "csharp": {
+    "extension": "cs"
+  },
+  "cpp": {
+    "extension": "cpp"
+  }
 }
