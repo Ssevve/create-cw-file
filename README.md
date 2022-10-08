@@ -1,5 +1,5 @@
 # create-cw-file
-An NPX tool that creates a base codewars file after providing a kata id.
+An NPM tool that creates a base codewars file after providing a kata id.
 
 **Link to project:** [here](https://www.npmjs.com/package/create-cw-file)
 

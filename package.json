@@ -1,6 +1,6 @@
 {
   "name": "create-cw-file",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Create a base codewars file.",
   "main": "index.js",
   "bin": {
