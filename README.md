@@ -1,5 +1,5 @@
 # create-cw-file
-An NPM tool that creates a base codewars file after providing a kata id.
+An NPM tool that creates a base codewars file with provided kata id.
 
 **Link to project:** [here](https://www.npmjs.com/package/create-cw-file)
 
@@ -20,8 +20,8 @@ To create a new file:
 npx create-cw-file kata-id
 ```
 
-It will create a directory (if it does not already exist) named after the difficulty of the kata inside the current folder.<br>
-Inside that directory, it will generate a javascript file with a commented out link to the kata and open it in VS Code.
+It will create a directory (if it does not already exist) inside the current folder named after the difficulty of the kata.<br>
+Inside that directory, it will generate a javascript file with a link to the challenge and open automatically it in VS Code.
 
 ```
 codewars
